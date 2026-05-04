@@ -493,11 +493,11 @@ const DB = {
 };
 
 const SOCIOS = [
-  'Axel Chiberriaga','Bruno Zavatiero','Daniel Zavatiero','Rodrigo Ferdinand',
-  'Raul Ponce','Agustin Sosa','Fernando Veneroso','Leonel Barboza',
-  'Javier Cernada','Matias Fonsalia','Miguel Fonseca','Osvaldo Machado',
-  'Wilfredo Paz','Eduardo Sasias','Edgardo Umpierre','Armando Carvalho',
-  'Carlos Porres','Julio Mañe','Daniel Pratto'
+  'Rodrigo Ferdinand','Julio Mañe','Wilfredo Paz','Bruno Zavatiero',
+  'Eduardo Sasias','Armando Carvalho','Leonel Barboza','Daniel Pratto',
+  'Axel Chiberriaga','Osvaldo Machado','Raul Ponce','Miguel Fonseca',
+  'Carlos Porres','Fernando Veneroso','Edgardo Umpierre','Daniel Zavatiero',
+  'Matias Fonsalia','Javier Cernada','Agustin Sosa'
 ];
 
 const INITIAL_PRODUCTS = [
@@ -563,13 +563,27 @@ const CAT_COLORS = {
 };
 
 function initDB() {
-  if (!DB.g('clients')) {
-    DB.s('clients', SOCIOS.map((n,i)=>({ id:i+1, name:n, phone:'', notes:'Socio', at:new Date().toISOString() })));
+  let cl = DB.g('clients');
+  if (!cl) {
+    cl = SOCIOS.map((n,i)=>({ id:i+1, name:n, phone:'', notes:'Socio', at:new Date().toISOString() }));
+    DB.s('clients', cl);
     DB.s('ncid', SOCIOS.length + 1);
   } else {
-    let cl = DB.g('clients');
+    // Remove Emilio Brogini if present
     const filtered = cl.filter(c => c.name.toLowerCase() !== 'emilio brogini');
-    if (filtered.length !== cl.length) DB.s('clients', filtered);
+    if (filtered.length !== cl.length) { cl = filtered; DB.s('clients', cl); }
+    // Sync socios order: remove old socios and re-add in new order, preserving non-socios
+    const nonSocios = cl.filter(c => c.notes !== 'Socio');
+    const existingSocioNames = cl.filter(c => c.notes === 'Socio').map(c => c.name);
+    // Rebuild socios in new order, keeping existing data if present
+    let maxId = cl.reduce((m,c)=>Math.max(m,c.id),0);
+    const newSocios = SOCIOS.map(name => {
+      const existing = cl.find(c => c.name === name && c.notes === 'Socio');
+      if (existing) return existing;
+      return { id: ++maxId, name, phone:'', notes:'Socio', at: new Date().toISOString() };
+    });
+    DB.s('clients', [...newSocios, ...nonSocios]);
+    DB.s('ncid', maxId + 1);
   }
   if (!DB.g('products')) { DB.s('products', INITIAL_PRODUCTS); DB.s('npid', 50); }
   else {
