@@ -99,7 +99,7 @@ nav {
 .nav-btn:hover { color: rgba(255,255,255,0.72); }
 .nav-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
 
-main { flex: 1; overflow: hidden; display: flex; }
+main { flex: 1; overflow: hidden; display: flex; min-height: 0; }
 .view { display: none; width: 100%; height: 100%; }
 .view.active { display: flex; }
 
@@ -270,6 +270,111 @@ main { flex: 1; overflow: hidden; display: flex; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--ink4); }
+
+/* ========== RESPONSIVE ========== */
+
+/* TABLET (hasta 900px) */
+@media (max-width: 900px) {
+  .cobro-right { display: none; }
+  .cobro-left { width: 240px; }
+  .hstat:not(:first-child) { display: none; }
+  .hstats-sep { display: none; }
+  .logo-sub { display: none; }
+}
+
+/* MOBILE (hasta 640px) */
+@media (max-width: 640px) {
+  body { overflow: auto; }
+
+  header {
+    height: auto;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .logo-main { font-size: 18px; letter-spacing: 2px; }
+  .hclock { font-size: 13px; padding: 4px 8px; }
+  .header-right { gap: 10px; }
+
+  nav {
+    padding: 0 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-btn { padding: 10px 12px; font-size: 12px; white-space: nowrap; }
+
+  main { flex-direction: column; overflow: visible; height: auto; }
+  .view { height: auto; min-height: calc(100vh - 110px); }
+  .view.active { flex-direction: column; }
+
+  /* COBRO en mobile: todo apilado verticalmente */
+  #view-cobro { flex-direction: column; }
+  .cobro-left {
+    width: 100%;
+    max-height: 55vh;
+    border-right: none;
+    border-bottom: 2px solid var(--border2);
+    flex-shrink: 0;
+  }
+  .cobro-right { display: none; }
+  .cobro-center {
+    flex: 1;
+    min-height: 0;
+  }
+  .cobro-center::before { display: none; }
+
+  .prod-grid { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+  .pb { padding: 7px 6px; }
+  .pb .pbn { font-size: 11px; }
+  .pb .pbp { font-size: 10px; }
+
+  .pay-inputs { grid-template-columns: 1fr 1fr; }
+  .pay-col:last-child { grid-column: 1 / -1; }
+  .pay-col input { font-size: 15px; padding: 8px; }
+  .total-val { font-size: 22px; }
+
+  .ticket-area { padding: 8px; }
+  .ticket-item { padding: 8px 10px; gap: 7px; }
+  .ti-name { font-size: 12px; }
+  .ti-price { font-size: 12px; min-width: 58px; }
+
+  /* CLIENTES */
+  .view-toolbar { padding: 10px 12px; flex-wrap: wrap; }
+  .view-toolbar input { max-width: 100%; }
+  .clients-grid { padding: 10px 12px; }
+  .client-card { padding: 9px 12px; gap: 9px; }
+  .avatar { width: 32px; height: 32px; font-size: 10px; }
+  .ci-name { font-size: 13px; }
+
+  /* HISTORIAL */
+  .hist-list { padding: 8px 12px; }
+  .hi-top { flex-wrap: wrap; gap: 4px; padding: 8px 10px; }
+  .hi-date { min-width: auto; font-size: 10px; }
+  .hi-preview { display: none; }
+  .hi-client { font-size: 12px; }
+  .hi-total { font-size: 12px; }
+
+  /* PRODUCTOS */
+  .prod-mgmt-grid { padding: 10px 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .pm-card { padding: 10px; }
+  .pm-icon { font-size: 22px; margin-bottom: 4px; }
+  .pm-name { font-size: 12px; }
+  .pm-price { font-size: 16px; }
+
+  /* MODAL */
+  .modal { padding: 18px 16px; }
+  .modal-btns { flex-direction: column; }
+
+  /* TOAST */
+  .toast { bottom: 10px; right: 10px; left: 10px; max-width: none; font-size: 12px; }
+}
+
+/* muy chico (375px) */
+@media (max-width: 400px) {
+  .prod-grid { grid-template-columns: 1fr 1fr; }
+  .cobro-left { max-height: 52vh; }
+}
+
 </style>
 </head>
 <body>
